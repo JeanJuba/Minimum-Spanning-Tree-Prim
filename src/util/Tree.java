@@ -37,12 +37,12 @@ public class Tree {
         dados = new ArrayList<>();
     }
 
-    public void readFile() throws FileNotFoundException, IOException {
-
-        String path = "data/dados.txt";
-        //String path = "dados_ex.txt";
-        //String path = "dados_ex2.txt";
-        File f = new File(path);
+    public String readFile(File f) throws FileNotFoundException, IOException {
+        StringBuilder input = new StringBuilder();
+        //String path = "data/dados.txt";
+        //String path = "data/dados_ex.txt";
+        //String path = "data/dados_ex2.txt";
+        //File f = new File(path);
         BufferedReader bf = new BufferedReader(new FileReader(f));
 
         int max = -1;
@@ -51,7 +51,8 @@ public class Tree {
         while (line != null) {
             //System.out.println(line);
             String[] split = line.split(" ");
-            int arvore = Integer.valueOf(split[0]);//Math.max(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
+            input.append(Arrays.toString(split)).append("\n");
+            int arvore = Integer.valueOf(split[0]); //Math.max(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
             max = arvore > max ? arvore : max;
             if (!listaArvoresDisponiveis.contains(arvore)) {
                 listaArvoresDisponiveis.add(arvore);
@@ -74,21 +75,27 @@ public class Tree {
             System.out.print(Arrays.toString(e));
         }
 
-        System.out.println("\n\nArvores \n\n");
-        for (int i : listaArvoresDisponiveis) {
-            System.out.println(i);
-        }
-
+        //System.out.println("\n\nArvores \n\n");
+        //for (int i : listaArvoresDisponiveis) {
+        //System.out.println(i);
+        //}
+        return input.toString();
     }
 
     public void prepareData() {
+        System.out.println("Arvores Disponíveis: " + listaArvoresDisponiveis.toString());
         for (int arvore : listaArvoresDisponiveis) {
+            System.out.println("arvore: " + arvore);
             int[] ligacoes = getEmptyArray();
             for (int[] e : dados) {
-                if (e[0] == arvore) {
-                    //dados.remove(e);
-                    System.out.println("ligacoes[e[1] - 1]: " + ligacoes[e[1] - 1] + "   e[2]: " + e[2]);
+                if (e[0] == arvore) {  //ex: 1 2 5 pega o 1 e compara
+                    System.out.println("e[1]: " + (e[1]) + "  ligacoes[e[1] - 1]: " + ligacoes[e[1] - 1] + "   e[2]: " + e[2]);
                     ligacoes[e[1] - 1] = e[2];
+                }
+
+                if (e[1] == arvore) {
+                    System.out.println("e[0]: " + (e[0]) + "  ligacoes[e[0] - 1]: " + ligacoes[e[0] - 1] + "   e[2]: " + e[2]);
+                    ligacoes[e[0] - 1] = e[2];
                 }
             }
             map.put(arvore, ligacoes);
@@ -106,7 +113,7 @@ public class Tree {
         return array;
     }
 
-    public void findTree() {
+    public String findTree() {
         StringBuilder resultadoLigacoes = new StringBuilder();
         int nodo = listaArvoresDisponiveis.remove(0);
         listaArvoresEmCheck.add(nodo);
@@ -138,8 +145,10 @@ public class Tree {
         }
 
         System.out.println("\n\n");
+        resultadoLigacoes.append("RESULTADO: ").append(valotTotal);
         System.out.println(resultadoLigacoes.toString());
-        System.out.println("RESULTADO: " + valotTotal);
+
+        return resultadoLigacoes.toString();
     }
 
     public void pritMap() {
